@@ -2,10 +2,7 @@ package edu.touro.cs;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -20,6 +17,29 @@ import java.util.Random;
 // take a screen shot of your GUI and add as comment in GitHub
 
 // Model - hi lo game computer selects 1 to 1000 and human guesses it
+enum GuessResponse{CORRECT,LOW,HIGH};
+class ImpossibleResponseException extends RuntimeException
+{
+    // ToDo : add c-tor with message
+}
+
+interface HighLowGameHumanPicks {
+    /**
+     * @return the computer's guess using binary serach through the legal range
+     */
+    int getGuess();
+
+    /**
+     *  @param response - player's response to last guess whether it eas Correct, Low, or High
+     *  @throws ImpossibleResponseException (inherits from RuntimeException)
+     */
+    void submitResponse(GuessResponse response);
+
+    /**
+     * Restarts game
+     */
+    void restart();
+}
 class HiLoComputerPicks
 {
     enum GuessResponse{CORRECT,LOW,HIGH};
@@ -54,53 +74,3 @@ class HiLoComputerPicks
 
 }
 
-class MyWindow extends JFrame {
-    private JTextField userGuess;
-    private JLabel promptLabel;
-    private HiLoComputerPicks game = new HiLoComputerPicks(100);
-
-
-    MyWindow() {
-        this.setTitle("First 364 GUI!!");
-        this.setSize(400, 200);
-
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        JPanel topPanel = new JPanel();
-
-        JButton button = new JButton("Submit my guess"); // event source
-        topPanel.add(button);
-
-
-
-
-        // registering the event listener
-ActionListener al = new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-
-        int guess = Integer.parseInt(userGuess.getText());
-
-        HiLoComputerPicks.GuessResponse gr = game.submitGuess(guess);
-
-        promptLabel.setText( "Your guess is too " + gr.toString() );
-    }
-};
-        button.addActionListener(al);
-
-        userGuess = new JTextField(10);
-        topPanel.add(userGuess);
-
-        promptLabel = new JLabel(game.prompt());
-        topPanel.add(promptLabel);
-
-        this.add(topPanel, BorderLayout.NORTH);
-
-        this.setVisible(true);
-    }
-
-
-
-
-}
